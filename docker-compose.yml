@@ -1,0 +1,49 @@
+name: udemy-fastapi-test-driven
+
+networks:
+  dev-network:
+    name: dev-network
+    driver: bridge
+
+services:
+
+  dev-db:
+    image: postgres:17.5-alpine
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ${PG_USER}
+      POSTGRES_PASSWORD: ${PG_PASSWORD}
+    env_file:
+      - .env
+    container_name: dev-db
+    volumes:
+      - ./scripts/db-setup.sh:/docker-entrypoint-initdb.d/db-setup.sh
+    networks:
+      - dev-network
+
+  test-db:
+    image: postgres:17.5-alpine
+    restart: always
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_USER: ${PG_USER}
+      POSTGRES_PASSWORD: ${PG_PASSWORD}
+    env_file:
+      - .env
+    container_name: test-db
+    volumes:
+      - ./scripts/db-setup.sh:/docker-entrypoint-initdb.d/db-setup.sh
+    networks:
+      - dev-network
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - "8080:8080"
+    container_name: adminer
+    networks:
+      - dev-network
