@@ -21,3 +21,6 @@ def db_session():
 
     with engine.begin() as connection:
         migrate_to_db("migrations", "alembic.ini", connection)
+
+    container.stop()
+    container.remove()
