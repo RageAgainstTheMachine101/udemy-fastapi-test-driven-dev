@@ -27,6 +27,6 @@ def db_session():
 
     yield SessionLocal
 
-    container.stop()
-    container.remove()
+    # container.stop()
+    # container.remove()
     engine.dispose()

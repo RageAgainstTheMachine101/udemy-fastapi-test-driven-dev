@@ -62,8 +62,4 @@ def start_db_container():
     if not wait_for_stable_status(container):
         raise RuntimeError("Container did not stabilize within the specified time")
 
-    # Set the TEST_DB_URL environment variable
-    db_url = f"postgresql://{container_config['environment']['POSTGRES_USER']}:{container_config['environment']['POSTGRES_PASSWORD']}@localhost:{container_config['ports']['5432']}/postgres"
-    os.environ["TEST_DB_URL"] = db_url
-
     return container
