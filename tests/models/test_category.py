@@ -64,10 +64,38 @@ def test_model_structure_column_constraints(db_inspector):
 - [ ] Verify the correctness of default values for relevant columns.
 """
 
+
+def test_model_structure_column_default_values(db_inspector):
+    table = "categories"
+    columns = {col["name"]: col for col in db_inspector.get_columns(table)}
+
+    assert columns["is_active"]["default"] == "false"
+    assert columns["level"]["default"] == "100"
+
+
 """
 - [ ] Ensure that column lengths align with defined requirements.
 """
 
+
+def test_model_structure_column_length(db_inspector):
+    table = "categories"
+    columns = {col["name"]: col for col in db_inspector.get_columns(table)}
+
+    assert columns["name"]["type"].length == 100
+    assert columns["slug"]["type"].length == 120
+
+
 """
 - [ ]  Validate the enforcement of unique constraints for columns requiring unique values.
 """
+
+
+def test_model_structure_column_unique(db_inspector):
+    table = "categories"
+    constants = db_inspector.get_unique_constraints(table)
+
+    assert any(
+        constraint["name"] == "uq_categories_name_level" for constraint in constants
+    )
+    assert any(constraint["name"] == "uq_categories_slug" for constraint in constants)
